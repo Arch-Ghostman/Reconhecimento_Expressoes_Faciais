@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detecção Facial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Detecção Facial</h1>
+        <div class="video-container">
+            <video id="video" width="640" height="480" autoplay muted></video>
+            <canvas id="overlay" width="640" height="480"></canvas>
+        </div>
+        <!-- Removidas as barras de expressão, pois estamos usando apenas detecção facial -->
+        <div class="status">Carregando modelos...</div>
+        <button id="webcam-permission" class="permission-button">Permitir Acesso à Webcam</button>
+    </div>
+
+    <!-- Scripts da Face-API.js -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
