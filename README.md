@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Aplicação de Reconhecimento de Expressões Faciais
 
 Esta aplicação web utiliza JavaScript e a biblioteca Face-API.js para acessar a webcam do usuário e realizar reconhecimento de expressões faciais em tempo real.
@@ -62,3 +63,6 @@ http-server
 - A aplicação requer permissão para acessar a webcam
 - Funciona melhor em navegadores modernos (Chrome, Firefox, Edge)
 - Requer conexão com a internet para carregar a biblioteca Face-API.js via CDN
+=======
+# Reconhecimento_Expressoes_Faciais
+>>>>>>> 5b2dc012b9dbbeb598bb27374fa303889d795b31
