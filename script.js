@@ -4,6 +4,15 @@ const overlay = document.getElementById('overlay');
 const statusElement = document.querySelector('.status');
 const permissionButton = document.getElementById('webcam-permission');
 
+// Elementos para exibir expressões
+const expressionElements = {
+    happy: document.getElementById('happy'),
+    sad: document.getElementById('sad'),
+    angry: document.getElementById('angry'),
+    surprised: document.getElementById('surprised'),
+    neutral: document.getElementById('neutral')
+};
+
 // Inicialmente esconder o botão de permissão
 permissionButton.classList.add('hidden');
 
@@ -86,10 +95,11 @@ async function startFaceDetection() {
         // Carregar modelos diretamente da CDN (já incluídos no script)
         await Promise.all([
             faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/gh/cgarciagl/face-api.js/weights'),
-            faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/gh/cgarciagl/face-api.js/weights')
+            faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/gh/cgarciagl/face-api.js/weights'),
+            faceapi.nets.faceExpressionNet.loadFromUri('https://cdn.jsdelivr.net/gh/cgarciagl/face-api.js/weights')
         ]);
         
-        statusElement.textContent = 'Detecção facial ativada!';
+        statusElement.textContent = 'Detecção facial e expressões ativadas!';
         
         // Configurar detecção
         const options = new faceapi.TinyFaceDetectorOptions({
@@ -99,9 +109,10 @@ async function startFaceDetection() {
 
         // Loop de detecção
         const detectAndDraw = async () => {
-            // Detectar apenas faces (sem expressões)
+            // Detectar faces com landmarks e expressões
             const detections = await faceapi.detectAllFaces(video, options)
-                .withFaceLandmarks();
+                .withFaceLandmarks()
+                .withFaceExpressions();
 
             // Limpar o canvas
             ctx.clearRect(0, 0, overlay.width, overlay.height);
@@ -115,6 +126,11 @@ async function startFaceDetection() {
             // Desenhar caixas e landmarks
             faceapi.draw.drawDetections(ctx, resizedDetections);
             faceapi.draw.drawFaceLandmarks(ctx, resizedDetections);
+            
+            // Atualizar barras de expressão para a primeira face detectada
+            if (resizedDetections.length > 0) {
+                updateExpressionBars(resizedDetections[0].expressions);
+            }
 
             // Continuar o loop
             requestAnimationFrame(detectAndDraw);
@@ -127,7 +143,18 @@ async function startFaceDetection() {
     }
 }
 
-// Nota: Removida a função updateExpressionBars, pois não estamos mais usando a detecção de expressões
+// Função para atualizar as barras de expressão
+function updateExpressionBars(expressions) {
+    if (!expressions) return;
+    
+    // Atualizar cada barra de expressão
+    for (const [expression, element] of Object.entries(expressionElements)) {
+        if (element && expressions[expression] !== undefined) {
+            const value = expressions[expression] * 100;
+            element.style.width = `${value}%`;
+        }
+    }
+}
 
 // Verificar se a API Face-API.js está disponível
 async function checkApiAvailability() {
